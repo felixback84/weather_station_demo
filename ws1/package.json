@@ -4,7 +4,7 @@
     "description": "virtual devices send random values",
     "main": "station.js",
     "scripts": {
-        "start": "node station.js"
+        "start": "node weather-station-1.js"
     },
     "author": "",
     "license": "ISC",

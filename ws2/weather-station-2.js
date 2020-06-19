@@ -3,7 +3,7 @@ const fs = require('fs');
 const jwt = require('jsonwebtoken');
 const mqtt = require('mqtt');
 
-console.log('STATION --- ACTIVATED');
+console.log('WEATHERSTATION2 --- ACTIVATED');
 
 // ----------------------------------------------------------------------------- JWT CONFIGURATION FUNCTION
 // Create a Cloud IoT Core JWT for the given project id, signed with the given
@@ -16,7 +16,7 @@ const createJwt = (projectId, privateKeyFile, algorithm) => {
     const token = {
         iat: parseInt(Date.now() / 1000),
         exp: parseInt(Date.now() / 1000) + 20 * 60, // 20 minutes
-        aud: projectId,
+        aud: projectId
     };
     const privateKey = fs.readFileSync(privateKeyFile);
     return jwt.sign(token, privateKey, {algorithm: algorithm});
@@ -27,7 +27,7 @@ const createJwt = (projectId, privateKeyFile, algorithm) => {
 // Function to publish messages asynchronously and periodically (every 5 seconds)
 const publishAsync = (
     mqttTopic,
-    client
+    client 
     ) => {
     setTimeout(() => {
         // Function to generate random values to send to the cloud platform
@@ -36,13 +36,8 @@ const publishAsync = (
         }
 
         const payload = {
-            deviceId: "device-wsd-1",
-            temperature: getRndInteger(-50, 50),
-            humidity: getRndInteger(0, 100),
-            wind_direction: getRndInteger(0, 360),
-            wind_intensity: getRndInteger(0, 100),
-            rain_height: getRndInteger(0, 50),
-            date: parseInt(Date.now()/1000)
+            deviceId: "device-wsd-2",
+            humidity: getRndInteger(0, 100)
         }
 
         // Publish "payload" to the MQTT topic. qos=1 means at least once delivery.
@@ -57,7 +52,7 @@ const publishAsync = (
 // --------------------------------------------------------------------------- SUBSCRIBING
 // Arguments of the google cloud platform
 const projectId = `test-pub-sub-iot`;
-const deviceId = `device-wsd-1`;
+const deviceId = `device-wsd-2`;
 const registryId = `assignment1`;
 const region = `us-central1`;
 const algorithm = `RS256`;

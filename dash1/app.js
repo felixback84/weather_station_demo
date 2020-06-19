@@ -85,27 +85,27 @@ io.on('connection', function(socket){
 
         /********************************************* USER ACTIVITY RECOGNITION *********************************************/
         const messageHandler2 = message => {
-            console.log(`Received message ${message.id}:`);
-            console.log('\tData:' + message.data);
-            console.log(`\tAttributes: ${message.attributes}`);
-            var payload = JSON.parse(message.data);
-            
-            /********************************* CLOUD BASED ***************************************/
-            if(payload.flag == 0){
-                var status = predict(payload.x, payload.y, payload.z);
+        console.log(`Received message ${message.id}:`);
+        console.log('\tData:' + message.data);
+        console.log(`\tAttributes: ${message.attributes}`);
+        var payload = JSON.parse(message.data);
+        
+        /********************************* CLOUD BASED ***************************************/
+        if(payload.flag == 0){
+            var status = predict(payload.x, payload.y, payload.z);
 
-                const newValue = {
-                deviceId: payload.user_id,
-                x: payload.x,
-                y: payload.y,
-                z: payload.z,
-                magnitude: (Math.hypot(payload.x, payload.y, payload.z)).toFixed(3),
-                date: parseInt(Date.now()/1000),
-                status: status
-                };
-                new AccelCloud(newValue).save();
+            const newValue = {
+            deviceId: payload.user_id,
+            x: payload.x,
+            y: payload.y,
+            z: payload.z,
+            magnitude: (Math.hypot(payload.x, payload.y, payload.z)).toFixed(3),
+            date: parseInt(Date.now()/1000),
+            status: status
+            };
+            new AccelCloud(newValue).save();
 
-                io.emit('status_cloud', JSON.stringify(newValue));
+            io.emit('status_cloud', JSON.stringify(newValue));
         }
 
         /*********************************** EDGE BASED ***************************************/
