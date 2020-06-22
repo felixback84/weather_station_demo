@@ -91,19 +91,22 @@ const client = mqtt.connect(connectionArgs);
 
 // Subscribe to the /devices/{device-id}/config topic to receive config updates.
 // Config updates are recommended to use QoS 1 (at least once delivery)
-client.subscribe(`/devices/${deviceId}/config`, {qos: 1});
+client.subscribe(MQTT_TOPIC_TO_CONFIG, {qos: 1});
 
 // Subscribe to the /devices/{device-id}/commands/# topic to receive all
 // commands or to the /devices/{device-id}/commands/<subfolder> to just receive
 // messages published to a specific commands folder; we recommend you use
 // QoS 0 (at most once delivery)
-client.subscribe(`/devices/${deviceId}/commands/#`, {qos: 0});
+client.subscribe(MQTT_TOPIC_TO_COMMANDS, {qos: 0});
+
+// The topic name must end in 'state' to publish state
+client.subscribe(MQTT_TOPIC_TO_STATE, {qos: 0});
 
 // The MQTT topic that this device will publish data to. The MQTT topic name is
 // required to be in the format below. The topic name must end in 'state' to
 // publish state and 'events' to publish telemetry. Note that this is not the
 // same as the device registry's Cloud Pub/Sub topic.
-const mqttTopic = `/devices/${deviceId}/${messageType}`;
+// const MQTT_TOPIC_TO_TELEMETRY = `/devices/${deviceId}/events`;
 
 // Handle the connection event
 client.on('connect', success => {
@@ -111,7 +114,7 @@ client.on('connect', success => {
     if (!success) {
         console.log('Client not connected...');
     } else {
-        publishAsync(mqttTopic, client);
+        publishAsync(MQTT_TOPIC_TO_TELEMETRY, client);
     }
 });
 
